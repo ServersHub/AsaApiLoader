@@ -10,17 +10,17 @@ export import :Inject;
 
 export namespace loader
 {
-    [[nodiscard]] auto findApiDirectory() -> std::filesystem::path
-    {
-        return std::filesystem::current_path().append(TEXT(R"(ArkApi)"));
-    }
-    [[nodiscard]] auto findDll() -> std::filesystem::path
-    {
-        return findApiDirectory().append(TEXT(R"(asa.dll)"));
-    }
+	[[nodiscard]] auto findApiDirectory() -> std::filesystem::path
+	{
+		return std::filesystem::current_path().append(TEXT(R"(ArkApi)"));
+	}
+	[[nodiscard]] auto findDll() -> std::filesystem::path
+	{
+		return findApiDirectory().append(TEXT(R"(AsaApi.dll)"));
+	}
 
-    [[nodiscard]] auto findExe() -> std::filesystem::path
-    {
-        return std::filesystem::current_path().append(TEXT(R"(ArkAscendedServer.exe)"));
-    }
+	[[nodiscard]] auto findExe() -> std::filesystem::path
+	{
+		return std::filesystem::current_path().append(TEXT(R"(ArkAscendedServer.exe)"));
+	}
 }
