@@ -13,14 +13,14 @@ int reject(HANDLE process, const std::string& message = "Critical Loading Error!
 {
     logger::error("{}", message);
 
-	for (int i = 3; i > 0; --i)
+    for (int i = 3; i > 0; --i)
     {
         using namespace std::chrono_literals;
         logger::info("Closing in {}", i);
         std::this_thread::sleep_for(1000ms);
     }
 
-	if (process)
+    if (process)
         TerminateProcess(process, 0);
 
     return 0;
@@ -28,6 +28,12 @@ int reject(HANDLE process, const std::string& message = "Critical Loading Error!
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
+
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
 
     fs::path server = loader::findExe();
     fs::path dll = loader::findDll();
