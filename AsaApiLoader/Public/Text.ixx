@@ -1,5 +1,5 @@
+module;
 #include <filesystem>
-
 export module Loader:Text;
 
 export namespace text

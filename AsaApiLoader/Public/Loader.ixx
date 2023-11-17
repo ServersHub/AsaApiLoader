@@ -1,7 +1,6 @@
 module;
 #include <filesystem>
 #include <Windows.h>
-
 export module Loader;
 
 export import :Text;
