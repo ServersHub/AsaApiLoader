@@ -32,7 +32,7 @@ jobs:
         id: vcpkg
         uses: johnwason/vcpkg-action@v5
         with:
-          manifest-dir: ${{ github.workspace }/AsaApiLoader} # Set to directory containing vcpkg.json
+          manifest-dir: ${{ github.workspace }}/AsaApiLoader # Set to directory containing vcpkg.json
           triplet: x64-windows-release
           token: ${{ github.token }}
 
