@@ -15,7 +15,7 @@ using handle = HANDLE;
 
 struct thread_parameters
 {
-    [[maybe_unused]] decltype(LoadLibrary)* load_library = LoadLibrary;
+    [[maybe_unused]] decltype(LoadLibraryEx)* load_library = LoadLibraryEx;
     [[maybe_unused]] decltype(GetProcAddress)* get_proc_address = GetProcAddress;
     [[maybe_unused]] TCHAR* dll_path = nullptr;
     explicit thread_parameters(TCHAR* dll_path) { this->dll_path = dll_path; }
@@ -30,17 +30,19 @@ struct loader_data
 };
 
 /*
-        48:83EC 28               | sub rsp, 28                             | allocate shadow space (5*8 bytes)
-        48:8BD9                  | mov rbx,rcx                             | copy loader_data to rbx
-        48:8D4B 10               | lea rcx,qword ptr ds:[rbx+10]           | move &loader_data.dll_path to arg1
-        48:8B09                  | mov rcx,qword ptr ds:[rcx]              | move *arg1 to arg1
-        FF13                     | call qword ptr ds:[rbx]                 | call loader_data.load_library
-        48:8BC8                  | mov rcx,rax                             | copy return of loader_data.load_library to arg1
-        BA 01000000              | mov edx,1                               | move ordinal to arg2
-        FF53 08                  | call qword ptr ds:[rbx+8]               | call loader_data.get_proc_address
-        FFD0                     | call rax                                | call return of loader_data.get_proc_address
-        48:83C4 28               | add rsp, 28                             | deallocate shadow space (5*8 bytes)
-        C3                       | ret                                     | return to caller
+        48 83 EC 28                  | sub rsp, 0x28                           | allocate shadow space (5*8 bytes)
+        48 8B D9                     | mov rbx,rcx                             | copy loader_data to rbx
+        48 8D 4B 10                  | lea rcx,[rbx+0x10]                      | move &loader_data.dll_path to arg1
+        48 8B 09                     | mov rcx,QWORD PTR [rcx]                 | move *arg1 to arg1
+        BA 00 00 00 00               | mov edx, 0x0                            | move nullptr into arg2
+        41 B8 00 00 00 00            | mov r8d, 0x0                            | move nullptr (flags) into arg3
+        FF 13                        | call QWORD PTR [rbx]                    | call loader_data.load_library
+        48 8B C8                     | mov rcx,rax                             | copy return of loader_data.load_library to arg1
+        BA 01 00 00 00               | mov edx, 0x1                            | move ordinal to arg2
+        FF 53 08                     | call QWORD PTR [rbx+0x8]                | call loader_data.get_proc_address
+        FF D0                        | call rax                                | call return of loader_data.get_proc_address
+        48 83 C4 28                  | add rsp, 0x28                           | deallocate shadow space (5*8 bytes)
+        C3                           | ret                                     | return to caller
 */
 constexpr std::uint8_t shell_code[] =
 {
@@ -48,6 +50,8 @@ constexpr std::uint8_t shell_code[] =
     0x48, 0x8B, 0xD9,
     0x48, 0x8D, 0x4B, 0x10,
     0x48, 0x8B, 0x09,
+    0xBA, 0x00, 0x00, 0x00, 0x00,
+    0x41, 0xB8, 0x00, 0x00, 0x00, 0x00,
     0xFF, 0x13,
     0x48, 0x8B, 0xC8,
     0xBA, 0x01, 0x00, 0x00, 0x00,
