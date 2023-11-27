@@ -16,20 +16,11 @@ jobs:
         include:
           - os: windows-latest
             vcpkgCommitId: 'c9f906558f9bb12ee9811d6edc98ec9255c6cda5'
-          - os: ubuntu-latest
-            vcpkgCommitId: 'c9f906558f9bb12ee9811d6edc98ec9255c6cda5'
-          - os: macos-latest
-            vcpkgCommitId: 'c9f906558f9bb12ee9811d6edc98ec9255c6cda5'
 
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-
-      - uses: lukka/get-cmake@latest
-      - name: List $RUNNER_WORKSPACE before build
-        run: find $RUNNER_WORKSPACE
-        shell: bash
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@main
