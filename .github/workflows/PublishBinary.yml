@@ -1,8 +1,6 @@
-name: MSBuild
+name: PublishBinary
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 env:
@@ -47,7 +45,4 @@ jobs:
           name: AsaApiLoader.exe
           path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: AsaApiLoader.pdb
-          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
+
