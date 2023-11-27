@@ -33,7 +33,7 @@ jobs:
         
       - name: Restore Packages
         working-directory: ${{env.SOLUTION_FILE_PATH}}/AsaApiLoader
-        run: vcpkg install --triplet x64-windows-static-md
+        run: vcpkg install --triplet=x64-windows-static-md --x-install-root=vcpkg_installed\x64-windows-static-md
 
       - name: Restore vcpkg packages
         working-directory: ${{env.GITHUB_WORKSPACE}}
