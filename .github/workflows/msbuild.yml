@@ -14,7 +14,6 @@ permissions:
 jobs:
   job:
     name: ${{ matrix.os }}-${{ github.workflow }}
-    continue-on-error: true
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -35,11 +34,16 @@ jobs:
         working-directory: ${{env.SOLUTION_FILE_PATH}}/AsaApiLoader
         run: vcpkg install --triplet=x64-windows-static-md --x-install-root=vcpkg_installed\x64-windows-static-md
 
-      - name: Restore vcpkg packages
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: vcpkg integrate install
-
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Upload EXE
+          path: ${{env.SOLUTION_FILE_PATH}}/x64/Debug/AsaApiLoader.exe
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Upload PDB
+          path: ${{env.SOLUTION_FILE_PATH}}/x64/Debug/AsaApiLoader.pdb
