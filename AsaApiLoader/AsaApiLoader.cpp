@@ -35,8 +35,8 @@ int main() {
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
 
-    fs::path server = loader::findExe();
-    fs::path dll = loader::findDll();
+    fs::path server = loader::find_server();
+    fs::path dll = loader::find_dll();
 
     if (!std::filesystem::exists(server))
         return reject(nullptr, "Server Missing!");
