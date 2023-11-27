@@ -331,7 +331,6 @@ auto reject_bad_load(auto result, auto process_handle, auto data) -> bool
 
     const auto thread_result = WaitForSingleObject(thread, INFINITE);
     const auto loader_result = thread_exit_code(thread);
-    std::cout << "exit code was " << (int)loader_result << "\n";
     CloseHandle(thread);
     if (thread_result)
         return reject_bad_thread(thread_result, process_handle, data);
