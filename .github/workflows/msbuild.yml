@@ -30,14 +30,14 @@ jobs:
           submodules: true
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
-  
+        
+      - name: Restore Packages
+        working-directory: ${{env.GITHUB_WORKSPACE}}/AsaApiLoader
+        run: vcpkg install
+
       - name: Restore vcpkg packages
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: vcpkg integrate install
-
-      - name: Restore Packages
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: vcpkg install --triplet=x64-windows-static-md fmt
 
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
