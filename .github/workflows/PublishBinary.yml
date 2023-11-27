@@ -45,4 +45,11 @@ jobs:
           name: AsaApiLoader
           path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/
 
-
+      - uses: softprops/action-gh-release@v1
+        with:
+          name: Lastest Auto-Build
+          files: |
+            ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
+            ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
