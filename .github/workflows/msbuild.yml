@@ -30,9 +30,18 @@ jobs:
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
   
-      - name: Restore vcpkg packages
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: vcpkg integrate install
+      - name: Install Vcpkg
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          ./vcpkg integrate install
+
+      - name: Cache Vcpkg Packages
+        uses: actions/cache@v2
+        with:
+          path: vcpkg/packages
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg/vcpkg.json') }}
 
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
