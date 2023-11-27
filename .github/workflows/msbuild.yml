@@ -28,18 +28,13 @@ jobs:
         with:
           submodules: true
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@main
-        id: runvcpkg
+      - name: vcpkg build
+        id: vcpkg
+        uses: johnwason/vcpkg-action@v5
         with:
-          vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-          vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
-          # Run vcpkg with the command specified by the `runVcpkgFormatString` input.
-          runVcpkgInstall: true
-          vcpkgJsonGlob: '**/AsaApiLoader/vcpkg.json'
-
-      - name: Prints output of run-vcpkg's action.
-        run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
+          manifest-dir: ${{ github.workspace }/AsaApiLoader} # Set to directory containing vcpkg.json
+          triplet: x64-windows-release
+          token: ${{ github.token }}
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
