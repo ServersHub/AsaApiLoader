@@ -37,11 +37,7 @@ jobs:
       uses: lukka/run-vcpkg@main
       id: runvcpkg
       with:
-        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-        vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
-        # Run vcpkg with the command specified by the `runVcpkgFormatString` input.
-        runVcpkgInstall: true
-        vcpkgJsonGlob: '**/vcpkg.json'
+        vcpkgJsonGlob: '**/AsaApiLoader/vcpkg.json'
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
