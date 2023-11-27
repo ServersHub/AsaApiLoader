@@ -45,9 +45,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Upload EXE
-          path: ${{env.SOLUTION_FILE_PATH}}/x64/Debug/AsaApiLoader.exe
+          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
 
       - uses: actions/upload-artifact@v3
         with:
           name: Upload PDB
-          path: ${{env.SOLUTION_FILE_PATH}}/x64/Debug/AsaApiLoader.pdb
+          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
