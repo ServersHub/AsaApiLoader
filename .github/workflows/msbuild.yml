@@ -5,6 +5,12 @@ on:
   pull_request:
     branches: [ "main", "actions" ]
 
+env:
+  SOLUTION_FILE_PATH: .
+  BUILD_CONFIGURATION: Release
+  
+permissions:
+  contents: read
 jobs:
   job:
     name: ${{ matrix.os }}-${{ github.workflow }}
@@ -34,6 +40,9 @@ jobs:
 
       - name: Prints output of run-vcpkg's action.
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
