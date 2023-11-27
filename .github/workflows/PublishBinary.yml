@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: AsaApiLoader.exe
-          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
+          name: AsaApiLoader
+          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/
 
 
