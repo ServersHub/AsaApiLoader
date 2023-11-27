@@ -26,7 +26,19 @@ int reject(HANDLE process, const std::string& message = "Critical Loading Error!
     return 0;
 }
 
+auto create_job() -> HANDLE
+{
+    JOBOBJECT_EXTENDED_LIMIT_INFORMATION extended_info = { };
+    extended_info.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+    auto job = CreateJobObject(nullptr, nullptr);
+    SetInformationJobObject(job, JobObjectExtendedLimitInformation, &extended_info, sizeof(extended_info));
+    return job;
+}
+
 int main() {
+
+    auto job = create_job(); // TODO Allow the user to decide on this functionality.
+
     SetConsoleOutputCP(CP_UTF8);
 
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -53,6 +65,7 @@ int main() {
     DWORD createFlags = CREATE_SUSPENDED;
 
     CreateProcess(server.c_str(), GetCommandLine(), nullptr, nullptr, FALSE, createFlags, nullptr, nullptr, &startupInfo, &procInfo);
+    AssignProcessToJobObject(job, procInfo.hProcess);
 
     const auto result = inject(procInfo.dwProcessId, dll);
 
@@ -62,5 +75,6 @@ int main() {
     ResumeThread(procInfo.hThread);
 
     WaitForSingleObject(procInfo.hProcess, INFINITE);
+    CloseHandle(job);
     return 0;
 }
