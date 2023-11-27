@@ -1,49 +1,50 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: MSBuild
-
 on:
   push:
     branches: [ "main", "actions" ]
   pull_request:
     branches: [ "main", "actions" ]
 
-env:
-  # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: .
-
-  # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-  BUILD_CONFIGURATION: Release
-
-permissions:
-  contents: read
-
 jobs:
-  build:
-    runs-on: windows-latest
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        include:
+          - os: windows-latest
+            vcpkgCommitId: 'c9f906558f9bb12ee9811d6edc98ec9255c6cda5'
+          - os: ubuntu-latest
+            vcpkgCommitId: 'c9f906558f9bb12ee9811d6edc98ec9255c6cda5'
+          - os: macos-latest
+            vcpkgCommitId: 'c9f906558f9bb12ee9811d6edc98ec9255c6cda5'
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
-      
-    - name: Setup vcpkg
-      uses: lukka/run-vcpkg@main
-      id: runvcpkg
-      with:
-        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-        vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
-        # Run vcpkg with the command specified by the `runVcpkgFormatString` input.
-        runVcpkgInstall: true
-        vcpkgJsonGlob: '**/AsaApiLoader/vcpkg.json'
+      - uses: lukka/get-cmake@latest
+      - name: List $RUNNER_WORKSPACE before build
+        run: find $RUNNER_WORKSPACE
+        shell: bash
 
-    - name: Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@main
+        id: runvcpkg
+        with:
+          vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+          vcpkgGitCommitId: '${{ matrix.vcpkgCommitId }}'
+          # Run vcpkg with the command specified by the `runVcpkgFormatString` input.
+          runVcpkgInstall: true
+          vcpkgJsonGlob: '**/AsaApiLoader/vcpkg.json'
 
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      - name: Prints output of run-vcpkg's action.
+        run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
+
+      - name: Build
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+
+        run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
