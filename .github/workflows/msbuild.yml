@@ -1,9 +1,9 @@
 name: MSBuild
 on:
   push:
-    branches: [ "main", "actions" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "actions" ]
+    branches: [ "main" ]
 
 env:
   SOLUTION_FILE_PATH: .
@@ -44,10 +44,10 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: Upload EXE
+          name: AsaApiLoader.exe
           path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
 
       - uses: actions/upload-artifact@v3
         with:
-          name: Upload PDB
+          name: AsaApiLoader.pdb
           path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
