@@ -1,7 +1,7 @@
 name: PublishBinary
 on:
   push:
-    branches: [ "main", "actions" ]
+    branches: [ "main" ]
 
 env:
   SOLUTION_FILE_PATH: .
