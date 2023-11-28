@@ -47,8 +47,8 @@ jobs:
 
       - name: Lastest Auto-Build
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          if: startsWith(github.ref, 'refs/tags/')
           files: |
             ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
             ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
