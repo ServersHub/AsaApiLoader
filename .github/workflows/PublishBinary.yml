@@ -48,7 +48,7 @@ jobs:
       - name: Tag the repository
         id: tag
         run: |
-          TAG=v$(date -Iseconds | sed 's/[T:\+]/-/g')
+          $:TAG=Get-Date -Format "HH.mm.yyyy.MM.dd"
           echo "$TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           git tag -a $TAG -m "Published version $TAG" ${GITHUB_SHA}
