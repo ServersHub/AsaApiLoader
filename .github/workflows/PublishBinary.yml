@@ -1,8 +1,6 @@
-name: MSBuild
+name: PublishBinary
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 env:
@@ -44,10 +42,15 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: AsaApiLoader.exe
-          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
+          name: AsaApiLoader
+          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/
 
-      - uses: actions/upload-artifact@v3
+      - name: Lastest Auto-Build
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: AsaApiLoader.pdb
-          path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
+          files: |
+            ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
+            ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
