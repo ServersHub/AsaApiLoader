@@ -45,21 +45,10 @@ jobs:
           name: AsaApiLoader
           path: ${{env.SOLUTION_FILE_PATH}}/x64/Release/
 
-      - name: Tag the repository
-        id: tag
-        run: |
-          $:TAG=Get-Date -Format "HH.mm.yyyy.MM.dd"
-          echo "$TAG"
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-          git config --global user.name "GitHub Action"
-          git config --global user.email "actions@github.com"
-          git tag -a $TAG -m "Published version $TAG" ${GITHUB_SHA}
-          git push origin $TAG
-
       - name: Lastest Auto-Build
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
+          if: startsWith(github.ref, 'refs/tags/')
           files: |
             ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.exe
             ${{env.SOLUTION_FILE_PATH}}/x64/Release/AsaApiLoader.pdb
